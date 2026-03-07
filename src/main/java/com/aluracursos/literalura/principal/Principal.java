@@ -4,8 +4,8 @@ import com.aluracursos.literalura.model.Datos;
 import com.aluracursos.literalura.model.DatosLibro;
 import com.aluracursos.literalura.service.ConsumoAPI;
 import com.aluracursos.literalura.service.ConvierteDatos;
-import com.aluracursos.literalura.service.IConvierteDatos;
 
+import java.util.DoubleSummaryStatistics;
 import java.util.Optional;
 import java.util.Scanner;
 
@@ -45,15 +45,25 @@ public class Principal {
 
         // Usamos Streams para encontrar el libro exacto dentro de la lista de resultados
         Optional<DatosLibro> libroBuscado = datos.resultados().stream()
-                .filter(l -> l.titulo().toUpperCase().contains(nombreLibro.toUpperCase()))
+                .filter(l -> l.titulo().toUpperCase().contains(l.titulo().toUpperCase()))
                 .findFirst();
 
         if (libroBuscado.isPresent()) {
-            System.out.println(" --- Libro Encontrado --- ");
-            System.out.println(libroBuscado.get());
+            System.out.println("Libro encontrado: " + libroBuscado.get().titulo());
         } else {
             System.out.println("Libro no encontrado en la base de datos de Gutendex.");
         }
+
+        DoubleSummaryStatistics est = datos.resultados().stream()
+                .filter(d -> d.numeroDeDescargas() > 0)
+                .mapToDouble(DatosLibro::numeroDeDescargas)
+                .summaryStatistics();
+
+        System.out.println("\n--- ESTADÍSTICAS DE BÚSQUEDA ---");
+        System.out.println("Media de descargas: " + est.getAverage());
+        System.out.println("Máxima de descargas: " + est.getMax());
+        System.out.println("Mínima de descargas: " + est.getMin());
+        System.out.println("Total de registros: " + est.getCount());
 
     }
 
