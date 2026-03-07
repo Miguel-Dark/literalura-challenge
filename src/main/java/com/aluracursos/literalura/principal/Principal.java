@@ -43,7 +43,6 @@ public class Principal {
     private void buscarLibroWeb() {
         Datos datos = getDatosLibro();
 
-        // Usamos Streams para encontrar el libro exacto dentro de la lista de resultados
         Optional<DatosLibro> libroBuscado = datos.resultados().stream()
                 .findFirst();
 
@@ -51,15 +50,18 @@ public class Principal {
             var libro = libroBuscado.get();
             System.out.println("\n--- LIBRO ENCONTRADO ---");
             System.out.println("Título: " + libro.titulo());
-            // Mostramos solo el primer autor de la lista
-            System.out.println("Autor: " + (libro.autor().isEmpty() ? "Desconocido" : libro.autor().get(0).nombre()));
-            // Mostramos solo el primer idioma (Fase 7 obligatoria)
-            System.out.println("Idioma: " + (libro.idiomas().isEmpty() ? "N/A" : libro.idiomas().get(0)));
-            System.out.println("Descargas: " + libro.numeroDeDescargas());
-            System.out.println("------------------------\n");
 
-        } else {
-            System.out.println("Libro no encontrado.");
+            // Requisito: Primer autor de la lista
+            String autor = libro.autor().isEmpty() ? "Desconocido" : libro.autor().get(0).nombre();
+            System.out.println("Autor: " + autor);
+
+            // Requisito: Solo el primer idioma de la lista
+            String idioma = libro.idiomas().isEmpty() ? "Desconocido" : libro.idiomas().get(0);
+            System.out.println("Idioma: " + idioma);
+
+            System.out.println("Descargas: " + libro.numeroDeDescargas());
+            System.out.println("--------------------------------------\n");
+
         }
 
         DoubleSummaryStatistics est = datos.resultados().stream()
@@ -81,5 +83,17 @@ public class Principal {
         var json = consumoAPI.obtenerDatos(URL_BASE + "?search=" + nombreLibro.replace(" ", "+"));
         var datos = conversor.obtenerDatos(json, Datos.class);
         return datos;
+    }
+
+    // Preparando el terreno para las Derived Queries (Listar por idioma)
+    private void listarLibrosPorIdioma() {
+        System.out.println("Introduce el código del idioma (es, en, fr, pt...):");
+        var idiomaBusqueda = teclado.nextLine();
+
+        // Aquí es donde entraría tu Repository en el futuro:
+        // repositorio.findByIdioma(idiomaBusqueda);
+
+        System.out.println("Buscando libros en el idioma: " + idiomaBusqueda);
+        // (Aquí iría la lógica de impresión de la lista)
     }
 }
