@@ -45,13 +45,21 @@ public class Principal {
 
         // Usamos Streams para encontrar el libro exacto dentro de la lista de resultados
         Optional<DatosLibro> libroBuscado = datos.resultados().stream()
-                .filter(l -> l.titulo().toUpperCase().contains(l.titulo().toUpperCase()))
                 .findFirst();
 
         if (libroBuscado.isPresent()) {
-            System.out.println("Libro encontrado: " + libroBuscado.get().titulo());
+            var libro = libroBuscado.get();
+            System.out.println("\n--- LIBRO ENCONTRADO ---");
+            System.out.println("Título: " + libro.titulo());
+            // Mostramos solo el primer autor de la lista
+            System.out.println("Autor: " + (libro.autor().isEmpty() ? "Desconocido" : libro.autor().get(0).nombre()));
+            // Mostramos solo el primer idioma (Fase 7 obligatoria)
+            System.out.println("Idioma: " + (libro.idiomas().isEmpty() ? "N/A" : libro.idiomas().get(0)));
+            System.out.println("Descargas: " + libro.numeroDeDescargas());
+            System.out.println("------------------------\n");
+
         } else {
-            System.out.println("Libro no encontrado en la base de datos de Gutendex.");
+            System.out.println("Libro no encontrado.");
         }
 
         DoubleSummaryStatistics est = datos.resultados().stream()
