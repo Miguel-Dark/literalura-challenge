@@ -1,10 +1,12 @@
 package com.aluracursos.literalura.principal;
 
 import com.aluracursos.literalura.model.Datos;
+import com.aluracursos.literalura.model.DatosLibro;
 import com.aluracursos.literalura.service.ConsumoAPI;
 import com.aluracursos.literalura.service.ConvierteDatos;
 import com.aluracursos.literalura.service.IConvierteDatos;
 
+import java.util.Optional;
 import java.util.Scanner;
 
 public class Principal {
@@ -40,7 +42,19 @@ public class Principal {
 
     private void buscarLibroWeb() {
         Datos datos = getDatosLibro();
-        System.out.println(datos);
+
+        // Usamos Streams para encontrar el libro exacto dentro de la lista de resultados
+        Optional<DatosLibro> libroBuscado = datos.resultados().stream()
+                .filter(l -> l.titulo().toUpperCase().contains(nombreLibro.toUpperCase()))
+                .findFirst();
+
+        if (libroBuscado.isPresent()) {
+            System.out.println(" --- Libro Encontrado --- ");
+            System.out.println(libroBuscado.get());
+        } else {
+            System.out.println("Libro no encontrado en la base de datos de Gutendex.");
+        }
+
     }
 
     private Datos getDatosLibro() {
