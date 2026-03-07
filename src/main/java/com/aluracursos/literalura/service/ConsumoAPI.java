@@ -17,8 +17,8 @@ public class ConsumoAPI {
 
         try {
             HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-            String json = response.body();
-            return json;
+            return response.body();
+
         } catch (IOException e) {
             throw new RuntimeException("Error de red: No se pudo alcanzar la API. " + e.getMessage());
         } catch (InterruptedException e) {
