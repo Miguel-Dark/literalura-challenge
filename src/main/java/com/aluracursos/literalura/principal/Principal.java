@@ -9,6 +9,8 @@ import com.aluracursos.literalura.repository.LibroRepository;
 import com.aluracursos.literalura.service.ConsumoAPI;
 import com.aluracursos.literalura.service.ConvierteDatos;
 
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 public class Principal {
@@ -213,8 +215,15 @@ public class Principal {
     private Datos getDatosLibro() {
         System.out.println("Escribe el nombre del libro que deseas buscar:");
         var nombreLibro = teclado.nextLine();
-        var json = consumoAPI.obtenerDatos(URL_BASE + "?search=" + nombreLibro.replace(" ", "+"));
-        var datos = conversor.obtenerDatos(json, Datos.class);
-        return datos;
+        try {
+            // Esto codifica el texto: convierte espacios en %20 y símbolos en códigos seguros
+            String nombreCodificado = URLEncoder.encode(nombreLibro, StandardCharsets.UTF_8);
+            var json = consumoAPI.obtenerDatos(URL_BASE + "?search=" + nombreCodificado);
+            var datos = conversor.obtenerDatos(json, Datos.class);
+            return datos;
+        } catch (Exception e) {
+            System.out.println("Error al procesar la búsqueda. Intenta con un nombre más sencillo.");
+            return new Datos(Collections.emptyList()); // Devolvemos una lista vacía para que no rompa el flujo
+        }
     }
 }
