@@ -21,8 +21,12 @@ public class Principal {
         while (opcion != 0) {
             var menu = """
                     1 - Buscar libro por título
+                    2 - Listar libros registrados
+                    3 - Listar autores registrados
+                    4 - Listar autores vivos en un determinado año
                     0 - Salir
                     """;
+
             System.out.println(menu);
             opcion = teclado.nextInt();
             teclado.nextLine();
