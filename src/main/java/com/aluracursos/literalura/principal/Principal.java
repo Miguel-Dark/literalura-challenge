@@ -1,7 +1,11 @@
 package com.aluracursos.literalura.principal;
 
+import com.aluracursos.literalura.model.Autor;
 import com.aluracursos.literalura.model.Datos;
 import com.aluracursos.literalura.model.DatosLibro;
+import com.aluracursos.literalura.model.Libro;
+import com.aluracursos.literalura.repository.AutorRepository;
+import com.aluracursos.literalura.repository.LibroRepository;
 import com.aluracursos.literalura.service.ConsumoAPI;
 import com.aluracursos.literalura.service.ConvierteDatos;
 
@@ -15,6 +19,14 @@ public class Principal {
     private ConsumoAPI consumoAPI = new ConsumoAPI();
     private ConvierteDatos conversor = new ConvierteDatos();
     private final String URL_BASE = "https://gutendex.com/books/";
+
+    private LibroRepository libroRepository;
+    private AutorRepository autorRepository;
+
+    public Principal(LibroRepository libroRepository, AutorRepository autorRepository){
+        this.libroRepository = libroRepository;
+        this.autorRepository = autorRepository;
+    }
 
     public void muestraElMenu() {
         var opcion = -1;
@@ -35,6 +47,15 @@ public class Principal {
                 case 1:
                     buscarLibroWeb();
                     break;
+                case 2:
+                    listarLibrosRegistrados();
+                    break;
+                case 3:
+                    listarAutoresRegistrados();
+                    break;
+                case 4:
+                    listarAutoresVivosEnUnDeterminadoAno();
+                    break;
                 case 0:
                     System.out.println("Cerrando la aplicación...");
                     break;
@@ -43,27 +64,51 @@ public class Principal {
             }
         }
     }
+    
+    private void listarLibrosRegistrados() {
+    }
+
+    private void listarAutoresRegistrados() {
+    }
+
+    private void listarAutoresVivosEnUnDeterminadoAno() {
+    }
 
     private void buscarLibroWeb() {
         Datos datos = getDatosLibro();
-
-        Optional<DatosLibro> libroBuscado = datos.resultados().stream()
-                .findFirst();
+        Optional<DatosLibro> libroBuscado = datos.resultados().stream().findFirst();
 
         if (libroBuscado.isPresent()) {
-            var libro = libroBuscado.get();
+            DatosLibro datosLibro = libroBuscado.get();
+
+            // 1. Convertir DatosAutor (DTO) a Autor (Entidad)
+            Autor autor = new Autor(datosLibro.autor().get(0));
+
+            // 2. Convertir DatosLibro (DTO) a Libro (Entidad)
+            Libro libro = new Libro(datosLibro);
+
+            // 3. Establecer la relación (Vincularlos)
+            libro.setAutor(autor);
+
+            // 4. PERSISTIR (Guardar en la DB)
+            // Guardamos el autor y, gracias al CascadeType.ALL, se guarda el libro
+            autorRepository.save(autor);
+
+            System.out.println("Libro guardado con éxito en la base de datos.");
+            // ... mostrar datos por consola como ya lo hacías ...
+
             System.out.println("\n--- LIBRO ENCONTRADO ---");
-            System.out.println("Título: " + libro.titulo());
+            System.out.println("Título: " + datosLibro.titulo());
 
             // Requisito: Primer autor de la lista
-            String autor = libro.autor().isEmpty() ? "Desconocido" : libro.autor().get(0).nombre();
-            System.out.println("Autor: " + autor);
+            String nombreAutor = datosLibro.autor().isEmpty() ? "Desconocido" : datosLibro.autor().get(0).nombre();
+            System.out.println("Autor: " + nombreAutor);
 
             // Requisito: Solo el primer idioma de la lista
-            String idioma = libro.idiomas().isEmpty() ? "Desconocido" : libro.idiomas().get(0);
+            String idioma = datosLibro.idiomas().isEmpty() ? "Desconocido" : datosLibro.idiomas().get(0);
             System.out.println("Idioma: " + idioma);
 
-            System.out.println("Descargas: " + libro.numeroDeDescargas());
+            System.out.println("Descargas: " + datosLibro.numeroDeDescargas());
             System.out.println("--------------------------------------\n");
 
         }
