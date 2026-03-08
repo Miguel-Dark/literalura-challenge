@@ -9,9 +9,7 @@ import com.aluracursos.literalura.repository.LibroRepository;
 import com.aluracursos.literalura.service.ConsumoAPI;
 import com.aluracursos.literalura.service.ConvierteDatos;
 
-import java.util.DoubleSummaryStatistics;
-import java.util.Optional;
-import java.util.Scanner;
+import java.util.*;
 
 public class Principal {
 
@@ -36,6 +34,7 @@ public class Principal {
                     2 - Listar libros registrados
                     3 - Listar autores registrados
                     4 - Listar autores vivos en un determinado año
+                    5 - Listar libros por idioma
                     0 - Salir
                     """;
 
@@ -56,6 +55,9 @@ public class Principal {
                 case 4:
                     listarAutoresVivosEnUnDeterminadoAno();
                     break;
+                case 5:
+                    listarLibrosPorIdioma();
+                    break;
                 case 0:
                     System.out.println("Cerrando la aplicación...");
                     break;
@@ -64,14 +66,85 @@ public class Principal {
             }
         }
     }
-    
+
     private void listarLibrosRegistrados() {
+        List<Libro> libros = libroRepository.findAll();
+
+        if (libros.isEmpty()) {
+            System.out.println("No hay libros registrados en la base de datos.");
+        } else {
+            System.out.println("\n--- LIBROS REGISTRADOS ---");
+            libros.forEach(System.out::println);
+            System.out.println("---------------------------\n");
+        }
     }
 
     private void listarAutoresRegistrados() {
+        List<Autor> autores = autorRepository.findAll();
+
+        if (autores.isEmpty()) {
+            System.out.println("No hay autores registrados.");
+        } else {
+            System.out.println("\n--- AUTORES REGISTRADOS ---");
+            autores.forEach(a -> System.out.println(
+                    "Nombre: " + a.getNombre() +
+                            " | Nacimiento: " + a.getFechaDeNacimiento() +
+                            " | Fallecimiento: " + a.getFechaDeFallecimiento()
+            ));
+            System.out.println("----------------------------\n");
+        }
     }
 
     private void listarAutoresVivosEnUnDeterminadoAno() {
+        System.out.println("Ingresa el año que deseas consultar:");
+        try {
+            var anio = teclado.nextInt();
+            teclado.nextLine();
+
+            // Usamos la Derived Query: buscamos que el año esté entre nacimiento y fallecimiento
+            List<Autor> autoresVivos = autorRepository.findByFechaDeNacimientoLessThanEqualAndFechaDeFallecimientoGreaterThanEqual(anio, anio);
+
+            if (autoresVivos.isEmpty()) {
+                System.out.println("No se encontraron autores vivos en el año " + anio);
+            } else {
+                System.out.println("\n--- AUTORES VIVOS EN " + anio + " ---");
+                autoresVivos.forEach(a -> System.out.println("Nombre: " + a.getNombre()));
+                System.out.println("----------------------------------\n");
+            }
+        } catch (InputMismatchException e) {
+            System.out.println("Error: Debes ingresar un número válido para el año.");
+            teclado.nextLine(); // Limpiar el buffer
+        }
+    }
+
+    // Preparando el terreno para las Derived Queries (Listar por idioma)
+    private void listarLibrosPorIdioma() {
+        System.out.println("""
+                Ingrese el idioma para buscar los libros:
+                es - español
+                en - inglés
+                fr - francés
+                pt - portugués
+                """);
+
+        var idiomaBusqueda = teclado.nextLine();
+
+        // 1. Llamamos al repositorio para traer la lista de la DB
+        List<Libro> librosPorIdioma = libroRepository.findByIdioma(idiomaBusqueda);
+
+        if (librosPorIdioma.isEmpty()) {
+            System.out.println("No se encontraron libros en ese idioma en la base de datos.");
+        } else {
+            System.out.println("\n--- LIBROS ENCONTRADOS (" + idiomaBusqueda + ") ---");
+            librosPorIdioma.forEach(System.out::println);
+
+            // 2. USO DE STREAMS PARA ESTADÍSTICAS
+            long cantidad = librosPorIdioma.stream().count();
+
+            System.out.println("\n--- ESTADÍSTICAS ---");
+            System.out.println("Cantidad de libros en '" + idiomaBusqueda + "': " + cantidad);
+            System.out.println("---------------------\n");
+        }
     }
 
     private void buscarLibroWeb() {
@@ -132,17 +205,5 @@ public class Principal {
         var json = consumoAPI.obtenerDatos(URL_BASE + "?search=" + nombreLibro.replace(" ", "+"));
         var datos = conversor.obtenerDatos(json, Datos.class);
         return datos;
-    }
-
-    // Preparando el terreno para las Derived Queries (Listar por idioma)
-    private void listarLibrosPorIdioma() {
-        System.out.println("Introduce el código del idioma (es, en, fr, pt...):");
-        var idiomaBusqueda = teclado.nextLine();
-
-        // Aquí es donde entraría tu Repository en el futuro:
-        // repositorio.findByIdioma(idiomaBusqueda);
-
-        System.out.println("Buscando libros en el idioma: " + idiomaBusqueda);
-        // (Aquí iría la lógica de impresión de la lista)
     }
 }
