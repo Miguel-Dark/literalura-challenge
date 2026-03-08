@@ -164,21 +164,27 @@ public class Principal {
         if (libroBuscado.isPresent()) {
             DatosLibro datosLibro = libroBuscado.get();
 
-            //Convertir DTOs a Entidades
-            Autor autor = new Autor(datosLibro.autor().get(0));
-            Libro libro = new Libro(datosLibro);
+            String nombreAutorBusqueda = datosLibro.autor().get(0).nombre();
+            Optional<Autor> autorExistente = autorRepository.findByNombreContainsIgnoreCase(nombreAutorBusqueda);
 
-            //VINCULACIÓN DOBLE (Sincronización)
+            Autor autor;
+            if (autorExistente.isPresent()) {
+                // Si ya está en PostgreSQL, lo recuperamos para no duplicar
+                autor = autorExistente.get();
+                System.out.println("Autor ya registrado en la base de datos: " + autor.getNombre());
+            } else {
+                // Si es nuevo, lo creamos y lo guardamos
+                autor = new Autor(datosLibro.autor().get(0));
+                autorRepository.save(autor);
+                System.out.println("Nuevo autor registrado: " + autor.getNombre());
+            }
+
+            // 2. Convertimos el DTO Libro a Entidad y vinculamos con el autor
+            Libro libro = new Libro(datosLibro);
             libro.setAutor(autor);
 
-            if (autor.getLibros() == null) {
-                autor.setLibros(new ArrayList<>());
-            }
-            autor.getLibros().add(libro);
-
-            // 4. PERSISTIR (Guardar en la DB)
-            // Guardamos el autor y, gracias al CascadeType.ALL, se guarda el libro
-            autorRepository.save(autor);
+            // 3. Persistimos el libro (el autor ya tiene su ID de la DB)
+            libroRepository.save(libro);
 
             System.out.println("Libro guardado con éxito en la base de datos.");
 
