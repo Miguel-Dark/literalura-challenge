@@ -37,6 +37,9 @@ public class Principal {
                     3 - Listar autores registrados
                     4 - Listar autores vivos en un determinado año
                     5 - Listar libros por idioma
+                    6 - Mostrar top 10 libros
+                    7 - Buscar autor por nombre
+                    8 - Generar estadisticas DB
                     0 - Salir
                     """;
 
@@ -62,6 +65,15 @@ public class Principal {
                     case 5:
                         listarLibrosPorIdioma();
                         break;
+                    case 6:
+                        mostrarTop10Libros();
+                        break;
+                    case 7:
+                        buscarAutorPorNombre();
+                        break;
+                    case 8:
+                        generarEstadisticasDB();
+                        break;
                     case 0:
                         System.out.println("Cerrando la aplicación...");
                         break;
@@ -75,6 +87,47 @@ public class Principal {
                 opcion = -1;
             }
         }
+    }
+
+    private void generarEstadisticasDB() {
+        List<Libro> todosLosLibros = libroRepository.findAll();
+
+        if (todosLosLibros.isEmpty()) {
+            System.out.println("No hay libros en la base de datos para generar estadísticas.");
+            return;
+        }
+
+        DoubleSummaryStatistics est = todosLosLibros.stream()
+                .filter(l -> l.getNumeroDeDescargas() > 0)
+                .mapToDouble(Libro::getNumeroDeDescargas)
+                .summaryStatistics();
+
+        System.out.println("\n--- ESTADÍSTICAS GLOBALES DE TU BIBLIOTECA ---");
+        System.out.println("Media de descargas: " + est.getAverage());
+        System.out.println("Máxima: " + est.getMax());
+        System.out.println("Mínima: " + est.getMin());
+        System.out.println("Total de libros en tu colección: " + est.getCount());
+    }
+
+    private void buscarAutorPorNombre() {
+        System.out.println("Escribe el nombre del autor que deseas buscar:");
+        var nombreAutor = teclado.nextLine();
+        Optional<Autor> autor = autorRepository.findByNombreContainsIgnoreCase(nombreAutor);
+
+        if (autor.isPresent()) {
+            System.out.println("\nAutor encontrado: " + autor.get().getNombre());
+            System.out.println("Nacimiento: " + autor.get().getFechaDeNacimiento());
+            // Puedes listar sus libros aquí también si quieres lucirte
+        } else {
+            System.out.println("No se encontró ningún autor con ese nombre en la base de datos.");
+        }
+    }
+
+    private void mostrarTop10Libros() {
+        List<Libro> topLibros = libroRepository.findTop10ByOrderByNumeroDeDescargasDesc();
+        System.out.println("\n--- LOS 10 LIBROS MÁS DESCARGADOS ---");
+        topLibros.forEach(l ->
+                System.out.println(l.getTitulo() + " - Descargas: " + l.getNumeroDeDescargas()));
     }
 
     private void listarLibrosRegistrados() {
