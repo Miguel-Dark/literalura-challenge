@@ -120,7 +120,6 @@ public class Principal {
         if (autor.isPresent()) {
             System.out.println("\nAutor encontrado: " + autor.get().getNombre());
             System.out.println("Nacimiento: " + autor.get().getFechaDeNacimiento());
-            // Puedes listar sus libros aquí también si quieres lucirte
         } else {
             System.out.println("No se encontró ningún autor con ese nombre en la base de datos.");
         }
@@ -167,7 +166,6 @@ public class Principal {
             var anio = teclado.nextInt();
             teclado.nextLine();
 
-            // Usamos la Derived Query: buscamos que el año esté entre nacimiento y fallecimiento
             List<Autor> autoresVivos = autorRepository.findByFechaDeNacimientoLessThanEqualAndFechaDeFallecimientoGreaterThanEqual(anio, anio);
 
             if (autoresVivos.isEmpty()) {
@@ -179,11 +177,10 @@ public class Principal {
             }
         } catch (InputMismatchException e) {
             System.out.println("Error: Debes ingresar un número válido para el año.");
-            teclado.nextLine(); // Limpiar el buffer
+            teclado.nextLine();
         }
     }
 
-    // Preparando el terreno para las Derived Queries (Listar por idioma)
     private void listarLibrosPorIdioma() {
         System.out.println("""
                 Ingrese el idioma para buscar los libros:
@@ -195,7 +192,6 @@ public class Principal {
 
         var idiomaBusqueda = teclado.nextLine();
 
-        // 1. Llamamos al repositorio para traer la lista de la DB
         List<Libro> librosPorIdioma = libroRepository.findByIdioma(idiomaBusqueda);
 
         if (librosPorIdioma.isEmpty()) {
@@ -204,7 +200,6 @@ public class Principal {
             System.out.println("\n--- LIBROS ENCONTRADOS (" + idiomaBusqueda + ") ---");
             librosPorIdioma.forEach(System.out::println);
 
-            // 2. USO DE STREAMS PARA ESTADÍSTICAS
             long cantidad = librosPorIdioma.stream().count();
 
             System.out.println("\n--- ESTADÍSTICAS ---");
@@ -228,7 +223,6 @@ public class Principal {
                 autor = autorExistente.get();
                 System.out.println("Autor ya registrado en la base de datos: " + autor.getNombre());
             } else {
-                // Si es nuevo, lo creamos y lo guardamos
                 autor = new Autor(datosLibro.autor().get(0));
                 autorRepository.save(autor);
                 System.out.println("Nuevo autor registrado: " + autor.getNombre());
@@ -237,10 +231,8 @@ public class Principal {
             Optional<Libro> libroExistente = libroRepository.findByTituloContainsIgnoreCase(datosLibro.titulo());
 
             if (libroExistente.isPresent()) {
-                // Si el libro ya existe, avisamos y no hacemos nada más
                 System.out.println("¡Aviso! El libro '" + datosLibro.titulo() + "' ya está en tu base de datos.");
             } else {
-                // Si el libro NO existe, lo creamos y lo guardamos
                 Libro libro = new Libro(datosLibro);
                 libro.setAutor(autor);
                 libroRepository.save(libro);
@@ -284,14 +276,13 @@ public class Principal {
         System.out.println("Escribe el nombre del libro que deseas buscar:");
         var nombreLibro = teclado.nextLine();
         try {
-            // Esto codifica el texto: convierte espacios en %20 y símbolos en códigos seguros
             String nombreCodificado = URLEncoder.encode(nombreLibro, StandardCharsets.UTF_8);
             var json = consumoAPI.obtenerDatos(URL_BASE + "?search=" + nombreCodificado);
             var datos = conversor.obtenerDatos(json, Datos.class);
             return datos;
         } catch (Exception e) {
             System.out.println("Error al procesar la búsqueda. Intenta con un nombre más sencillo.");
-            return new Datos(Collections.emptyList()); // Devolvemos una lista vacía para que no rompa el flujo
+            return new Datos(Collections.emptyList());
         }
     }
 }

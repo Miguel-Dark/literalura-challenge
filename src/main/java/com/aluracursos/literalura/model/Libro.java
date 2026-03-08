@@ -16,7 +16,7 @@ public class Libro {
     private Double numeroDeDescargas;
 
     @ManyToOne
-    @JoinColumn(name = "autor_id") // Esta es la llave foránea en SQL
+    @JoinColumn(name = "autor_id")
     private Autor autor;
 
     public Libro() {}
