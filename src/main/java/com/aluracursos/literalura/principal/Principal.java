@@ -38,31 +38,39 @@ public class Principal {
                     0 - Salir
                     """;
 
-            System.out.println(menu);
-            opcion = teclado.nextInt();
-            teclado.nextLine();
+            try {
+                System.out.println(menu);
+                // Leemos como String y convertimos para evitar que el scanner se bloquee
+                var lectura = teclado.nextLine();
+                opcion = Integer.parseInt(lectura);
 
-            switch (opcion) {
-                case 1:
-                    buscarLibroWeb();
-                    break;
-                case 2:
-                    listarLibrosRegistrados();
-                    break;
-                case 3:
-                    listarAutoresRegistrados();
-                    break;
-                case 4:
-                    listarAutoresVivosEnUnDeterminadoAno();
-                    break;
-                case 5:
-                    listarLibrosPorIdioma();
-                    break;
-                case 0:
-                    System.out.println("Cerrando la aplicación...");
-                    break;
-                default:
-                    System.out.println("Opción inválida");
+                switch (opcion) {
+                    case 1:
+                        buscarLibroWeb();
+                        break;
+                    case 2:
+                        listarLibrosRegistrados();
+                        break;
+                    case 3:
+                        listarAutoresRegistrados();
+                        break;
+                    case 4:
+                        listarAutoresVivosEnUnDeterminadoAno();
+                        break;
+                    case 5:
+                        listarLibrosPorIdioma();
+                        break;
+                    case 0:
+                        System.out.println("Cerrando la aplicación...");
+                        break;
+                    default:
+                        System.out.println("Opción inválida");
+                }
+            } catch (NumberFormatException e) {
+                System.out.println("******************************************");
+                System.out.println("ERROR: Por favor, ingresa un número válido.");
+                System.out.println("******************************************");
+                opcion = -1;
             }
         }
     }
