@@ -44,8 +44,11 @@ public class Principal {
                     """;
 
             try {
+                System.out.println("\n**************************************************************");
+                System.out.println(">>> ¿Qué desea consultar hoy?");
+                System.out.println("**************************************************************\n");
                 System.out.println(menu);
-                // Leemos como String y convertimos para evitar que el scanner se bloquee
+                System.out.print("Por favor, seleccione una opción [0-8]: ");
                 var lectura = teclado.nextLine();
                 opcion = Integer.parseInt(lectura);
 
@@ -244,8 +247,8 @@ public class Principal {
                 System.out.println("Libro guardado con éxito en la base de datos.");
             }
 
-            System.out.println("\n--- LIBRO ENCONTRADO ---");
-            System.out.println("Título: " + datosLibro.titulo());
+            System.out.println("\n--- DETALLES DEL LIBRO ENCONTRADO ---");
+            System.out.println("Título Oficial: " + datosLibro.titulo().toUpperCase());
 
             // Requisito: Primer autor de la lista
             String nombreAutor = datosLibro.autor().isEmpty() ? "Desconocido" : datosLibro.autor().get(0).nombre();
@@ -255,7 +258,7 @@ public class Principal {
             String idioma = datosLibro.idiomas().isEmpty() ? "Desconocido" : datosLibro.idiomas().get(0);
             System.out.println("Idioma: " + idioma);
 
-            System.out.println("Descargas: " + datosLibro.numeroDeDescargas());
+            System.out.println("Número de descargas: " + datosLibro.numeroDeDescargas());
             System.out.println("--------------------------------------\n");
 
         }
