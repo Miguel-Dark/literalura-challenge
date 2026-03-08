@@ -154,21 +154,24 @@ public class Principal {
         if (libroBuscado.isPresent()) {
             DatosLibro datosLibro = libroBuscado.get();
 
-            // 1. Convertir DatosAutor (DTO) a Autor (Entidad)
+            //Convertir DTOs a Entidades
             Autor autor = new Autor(datosLibro.autor().get(0));
-
-            // 2. Convertir DatosLibro (DTO) a Libro (Entidad)
             Libro libro = new Libro(datosLibro);
 
-            // 3. Establecer la relación (Vincularlos)
+            //VINCULACIÓN DOBLE (Sincronización)
             libro.setAutor(autor);
+
+            // IMPORTANTE: Si tu clase Autor tiene la lista de libros, añade el libro a la lista
+            if (autor.getLibros() == null) {
+                autor.setLibros(new ArrayList<>());
+            }
+            autor.getLibros().add(libro);
 
             // 4. PERSISTIR (Guardar en la DB)
             // Guardamos el autor y, gracias al CascadeType.ALL, se guarda el libro
             autorRepository.save(autor);
 
             System.out.println("Libro guardado con éxito en la base de datos.");
-            // ... mostrar datos por consola como ya lo hacías ...
 
             System.out.println("\n--- LIBRO ENCONTRADO ---");
             System.out.println("Título: " + datosLibro.titulo());
