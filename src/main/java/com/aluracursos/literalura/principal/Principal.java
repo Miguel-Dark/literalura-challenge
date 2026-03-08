@@ -169,7 +169,6 @@ public class Principal {
 
             Autor autor;
             if (autorExistente.isPresent()) {
-                // Si ya está en PostgreSQL, lo recuperamos para no duplicar
                 autor = autorExistente.get();
                 System.out.println("Autor ya registrado en la base de datos: " + autor.getNombre());
             } else {
@@ -179,14 +178,18 @@ public class Principal {
                 System.out.println("Nuevo autor registrado: " + autor.getNombre());
             }
 
-            // 2. Convertimos el DTO Libro a Entidad y vinculamos con el autor
-            Libro libro = new Libro(datosLibro);
-            libro.setAutor(autor);
+            Optional<Libro> libroExistente = libroRepository.findByTituloContainsIgnoreCase(datosLibro.titulo());
 
-            // 3. Persistimos el libro (el autor ya tiene su ID de la DB)
-            libroRepository.save(libro);
-
-            System.out.println("Libro guardado con éxito en la base de datos.");
+            if (libroExistente.isPresent()) {
+                // Si el libro ya existe, avisamos y no hacemos nada más
+                System.out.println("¡Aviso! El libro '" + datosLibro.titulo() + "' ya está en tu base de datos.");
+            } else {
+                // Si el libro NO existe, lo creamos y lo guardamos
+                Libro libro = new Libro(datosLibro);
+                libro.setAutor(autor);
+                libroRepository.save(libro);
+                System.out.println("Libro guardado con éxito en la base de datos.");
+            }
 
             System.out.println("\n--- LIBRO ENCONTRADO ---");
             System.out.println("Título: " + datosLibro.titulo());
