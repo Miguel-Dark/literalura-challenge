@@ -171,7 +171,6 @@ public class Principal {
             //VINCULACIÓN DOBLE (Sincronización)
             libro.setAutor(autor);
 
-            // IMPORTANTE: Si tu clase Autor tiene la lista de libros, añade el libro a la lista
             if (autor.getLibros() == null) {
                 autor.setLibros(new ArrayList<>());
             }
@@ -199,16 +198,20 @@ public class Principal {
 
         }
 
-        DoubleSummaryStatistics est = datos.resultados().stream()
-                .filter(d -> d.numeroDeDescargas() > 0)
-                .mapToDouble(DatosLibro::numeroDeDescargas)
-                .summaryStatistics();
+        if (!datos.resultados().isEmpty()) {
+            DoubleSummaryStatistics est = datos.resultados().stream()
+                    .filter(d -> d.numeroDeDescargas() > 0)
+                    .mapToDouble(DatosLibro::numeroDeDescargas)
+                    .summaryStatistics();
 
-        System.out.println("\n--- ESTADÍSTICAS DE BÚSQUEDA ---");
-        System.out.println("Media de descargas: " + est.getAverage());
-        System.out.println("Máxima de descargas: " + est.getMax());
-        System.out.println("Mínima de descargas: " + est.getMin());
-        System.out.println("Total de registros: " + est.getCount());
+            System.out.println("\n--- ESTADÍSTICAS DE BÚSQUEDA ---");
+            System.out.println("Media de descargas: " + est.getAverage());
+            System.out.println("Máxima de descargas: " + est.getMax());
+            System.out.println("Mínima de descargas: " + est.getMin());
+            System.out.println("Total de registros: " + est.getCount());
+        } else {
+            System.out.println("\nNo se encontraron estadísticas porque no hubo resultados de búsqueda.");
+        }
 
     }
 
