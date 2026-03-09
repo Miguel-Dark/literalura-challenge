@@ -8,6 +8,10 @@
   <img src="https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white" alt="PostgreSQL">
   <img src="https://img.shields.io/badge/Hibernate-59666C?style=for-the-badge&logo=Hibernate&logoColor=white" alt="Hibernate">
   <img src="https://img.shields.io/badge/Apache%20Maven-C71A36?style=for-the-badge&logo=Apache%20Maven&logoColor=white" alt="Maven">
+<br>
+<img src="https://img.shields.io/badge/Alura%20LATAM-012443?style=for-the-badge&logo=Alura&logoColor=white" alt="Alura Latam">
+  <img src="https://img.shields.io/badge/Oracle%20Next%20Education%20(ONE)-F80000?style=for-the-badge&logo=oracle&logoColor=white" alt="Oracle Next Education (ONE)">
+  <img src="https://img.shields.io/badge/G9-orange?style=for-the-badge" alt="Generación 9">
 </p>
 
 <p>Este proyecto es una aplicación de consola diseñada para gestionar un catálogo literario personal consumiendo datos reales de la <strong>API Gutendex</strong>. El sistema permite realizar búsquedas de libros en la web, persistir la información en una base de datos relacional y realizar diversas consultas estadísticas y de filtrado sobre los datos almacenados.</p>
@@ -32,10 +36,10 @@
 </table>
 
 <h2>Descripción</h2>
-<p>Desarrollé <strong>LiterAlura</strong> como un desafío técnico personal para poner a prueba y demostrar mis habilidades en el ecosistema Backend utilizando <strong>Java</strong> y <strong>Spring Framework</strong>. Mi aplicación interactúa directamente con la API de Gutendex, la cual brinda acceso a un catálogo de más de 70,000 libros del Proyecto Gutenberg. El enfoque principal de mi trabajo fue construir una herramienta eficiente capaz de registrar libros y autores de forma inteligente, asegurando la integridad de los datos al evitar duplicados y ofreciendo métricas de alto valor estadístico para el usuario final.</p>
+<p>Desarrollé <strong>LiterAlura</strong> como parte del Challenge propuesto en el curso <strong>"Practicando Spring Boot"</strong> de <strong>Alura LATAM</strong> y el programa <strong>Oracle Next Education (ONE)</strong>. Este proyecto tiene como objetivo demostrar mis habilidades técnicas en el desarrollo Backend utilizando <strong>Java</strong> y <strong>Spring Framework</strong>. La aplicación interactúa directamente con la API de Gutendex, accediendo a un catálogo de más de 70,000 libros del Proyecto Gutenberg. Mi trabajo se enfocó en construir una herramienta eficiente para el registro inteligente de libros y autores, garantizando la integridad de los datos mediante la prevención de duplicados y proporcionando métricas estadísticas de alto valor para el usuario.</p>
 
 <h2>Estado del Proyecto</h2>
-<p><strong>Finalizado:</strong> He completado satisfactoriamente el sistema, cumpliendo con la totalidad de los requisitos técnicos propuestos e integrando funcionalidades adicionales de análisis estadístico que elevan la calidad del proyecto.</p>
+<p><strong>Finalizado:</strong> He completado satisfactoriamente todos los requisitos del Challenge de Alura/ONE, integrando además funcionalidades adicionales de análisis estadístico que enriquecen la aplicación.</p>
 
 <h2>Capturas de Pantalla</h2>
 <ol>
