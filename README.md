@@ -1,7 +1,7 @@
 <h1 align="center">LiterAlura - Catálogo de Libros</h1>
 
 <p align="center">
-  <img src="banner_literalura.png" alt="Banner LiterAlura" width="100%">
+  <img src="assets/banner_literalura.png" alt="Banner LiterAlura" width="100%">
 </p>
 
 <p align="center">
@@ -41,11 +41,11 @@
 
 <h2>Capturas de Pantalla</h2>
 <ol>
-  <li><strong>Autores Registrados en la Base de Datos:</strong><br><img src="consola_autores_registrados_db.png" alt="Captura 1"></li>
-  <li><strong>Búsqueda de Autores Vivos:</strong><br><img src="consola_autores_vivos_db.png" alt="Captura 2"></li>
-  <li><strong>Libros Filtrados por Idioma:</strong><br><img src="consola_libros_encontrados_por_idioma_db.png" alt="Captura 3"></li>
-  <li><strong>Catálogo de Libros Registrados:</strong><br><img src="consola_libros_registrados_db.png" alt="Captura 4"></li>
-  <li><strong>Ranking de los 10 Libros más Descargados:</strong><br><img src="consola_top_10_libros_mas_descargados_db.png" alt="Captura 5"></li>
+  <li><strong>Autores Registrados en la Base de Datos:</strong><br><img src="assets/consola_autores_registrados_db.png" alt="Captura 1"></li>
+  <li><strong>Búsqueda de Autores Vivos:</strong><br><img src="assets/consola_autores_vivos_db.png" alt="Captura 2"></li>
+  <li><strong>Libros Filtrados por Idioma:</strong><br><img src="assets/consola_libros_encontrados_por_idioma_db.png" alt="Captura 3"></li>
+  <li><strong>Catálogo de Libros Registrados:</strong><br><img src="assets/consola_libros_registrados_db.png" alt="Captura 4"></li>
+  <li><strong>Ranking de los 10 Libros más Descargados:</strong><br><img src="assets/consola_top_10_libros_mas_descargados_db.png" alt="Captura 5"></li>
 </ol>
 
 <h2>Funcionalidades</h2>
