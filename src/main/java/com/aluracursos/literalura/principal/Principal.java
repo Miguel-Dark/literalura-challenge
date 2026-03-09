@@ -12,6 +12,7 @@ import com.aluracursos.literalura.service.ConvierteDatos;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Principal {
 
@@ -63,7 +64,7 @@ public class Principal {
                         listarAutoresRegistrados();
                         break;
                     case 4:
-                        listarAutoresVivosEnUnDeterminadoAno();
+                        listarAutoresVivosEnUnDeterminadoAnio();
                         break;
                     case 5:
                         listarLibrosPorIdioma();
@@ -96,7 +97,7 @@ public class Principal {
         List<Libro> todosLosLibros = libroRepository.findAll();
 
         if (todosLosLibros.isEmpty()) {
-            System.out.println("No hay libros en la base de datos para generar estadísticas.");
+            System.out.println("\n[!] No hay libros en la base de datos para generar estadísticas.\n");
             return;
         }
 
@@ -105,31 +106,56 @@ public class Principal {
                 .mapToDouble(Libro::getNumeroDeDescargas)
                 .summaryStatistics();
 
-        System.out.println("\n--- ESTADÍSTICAS GLOBALES DE TU BIBLIOTECA ---");
-        System.out.println("Media de descargas: " + est.getAverage());
-        System.out.println("Máxima: " + est.getMax());
-        System.out.println("Mínima: " + est.getMin());
-        System.out.println("Total de libros en tu colección: " + est.getCount());
+        System.out.println("\n=================================================");
+        System.out.println("   ESTADÍSTICAS GLOBALES DE TU BIBLIOTECA   ");
+        System.out.println("=================================================");
+        System.out.printf(" > Media de descargas: %.2f%n", est.getAverage());
+        System.out.printf(" > Máxima de descargas: %.0f%n", est.getMax());
+        System.out.printf(" > Mínima de descargas: %.0f%n", est.getMin());
+        System.out.println(" > Total de libros evaluados: " + est.getCount());
+        System.out.println("=================================================\n");
     }
 
     private void buscarAutorPorNombre() {
         System.out.println("Escribe el nombre del autor que deseas buscar:");
         var nombreAutor = teclado.nextLine();
-        Optional<Autor> autor = autorRepository.findByNombreContainsIgnoreCase(nombreAutor);
+        Optional<Autor> autorEncontrado = autorRepository.findByNombreContainsIgnoreCase(nombreAutor);
 
-        if (autor.isPresent()) {
-            System.out.println("\nAutor encontrado: " + autor.get().getNombre());
-            System.out.println("Nacimiento: " + autor.get().getFechaDeNacimiento());
+        if (autorEncontrado.isPresent()) {
+            Autor a = autorEncontrado.get();
+            System.out.println("\n--- AUTOR ENCONTRADO ---");
+            System.out.println("Autor: " + a.getNombre());
+            System.out.println("Fecha de nacimiento: " + (a.getFechaDeNacimiento() != null ? a.getFechaDeNacimiento() : "N/A"));
+            System.out.println("Fecha de fallecimiento: " + (a.getFechaDeFallecimiento() != null ? a.getFechaDeFallecimiento() : "Presente"));
+
+            String librosDelAutor = a.getLibros().stream()
+                    .map(Libro::getTitulo)
+                    .collect(Collectors.joining(", "));
+
+            System.out.println("Libros: [" + librosDelAutor + "]");
+            System.out.println("------------------------\n");
         } else {
-            System.out.println("No se encontró ningún autor con ese nombre en la base de datos.");
+            System.out.println("\n[!] No se encontró ningún autor con el nombre '" + nombreAutor + "' en nuestra base de datos.\n");
         }
     }
 
     private void mostrarTop10Libros() {
         List<Libro> topLibros = libroRepository.findTop10ByOrderByNumeroDeDescargasDesc();
-        System.out.println("\n--- LOS 10 LIBROS MÁS DESCARGADOS ---");
-        topLibros.forEach(l ->
-                System.out.println(l.getTitulo() + " - Descargas: " + l.getNumeroDeDescargas()));
+
+        if (topLibros.isEmpty()) {
+            System.out.println("\nNo hay libros registrados para calcular el Top 10.");
+        } else {
+            System.out.println("\n----- LOS 10 LIBROS MÁS DESCARGADOS -----");
+
+            for (int i = 0; i < topLibros.size(); i++) {
+                Libro l = topLibros.get(i);
+                System.out.println((i + 1) + ". TÍTULO: " + l.getTitulo().toUpperCase());
+                System.out.println("   Autor: " + (l.getAutor() != null ? l.getAutor().getNombre() : "Desconocido"));
+                System.out.println("   Descargas: " + l.getNumeroDeDescargas());
+                System.out.println("   --------------------------------------");
+            }
+            System.out.println("\n");
+        }
     }
 
     private void listarLibrosRegistrados() {
@@ -139,8 +165,14 @@ public class Principal {
             System.out.println("No hay libros registrados en la base de datos.");
         } else {
             System.out.println("\n--- LIBROS REGISTRADOS ---");
-            libros.forEach(System.out::println);
-            System.out.println("---------------------------\n");
+            libros.forEach(l -> {
+                System.out.println("\n---------- LIBRO ----------");
+                System.out.println("Título: " + l.getTitulo().toUpperCase());
+                System.out.println("Autor: " + (l.getAutor() != null ? l.getAutor().getNombre() : "Desconocido"));
+                System.out.println("Idioma: " + l.getIdioma());
+                System.out.println("Número de descargas: " + l.getNumeroDeDescargas());
+                System.out.println("---------------------------\n");
+            });
         }
     }
 
@@ -151,16 +183,22 @@ public class Principal {
             System.out.println("No hay autores registrados.");
         } else {
             System.out.println("\n--- AUTORES REGISTRADOS ---");
-            autores.forEach(a -> System.out.println(
-                    "Nombre: " + a.getNombre() +
-                            " | Nacimiento: " + a.getFechaDeNacimiento() +
-                            " | Fallecimiento: " + a.getFechaDeFallecimiento()
-            ));
-            System.out.println("----------------------------\n");
+            autores.forEach(a -> {
+                System.out.println("Autor: " + a.getNombre());
+                System.out.println("Fecha de nacimiento: " + (a.getFechaDeNacimiento() != null ? a.getFechaDeNacimiento() : "N/A"));
+                System.out.println("Fecha de fallecimiento: " + (a.getFechaDeFallecimiento() != null ? a.getFechaDeFallecimiento() : "Presente"));
+
+                String librosDelAutor = a.getLibros().stream()
+                        .map(Libro::getTitulo)
+                        .collect(Collectors.joining(", "));
+
+                System.out.println("Libros: [" + librosDelAutor + "]");
+                System.out.println("---------------------------"); // El toque de orden final
+            });
         }
     }
 
-    private void listarAutoresVivosEnUnDeterminadoAno() {
+    private void listarAutoresVivosEnUnDeterminadoAnio() {
         System.out.println("Ingresa el año que deseas consultar:");
         try {
             var anio = teclado.nextInt();
@@ -171,9 +209,19 @@ public class Principal {
             if (autoresVivos.isEmpty()) {
                 System.out.println("No se encontraron autores vivos en el año " + anio);
             } else {
-                System.out.println("\n--- AUTORES VIVOS EN " + anio + " ---");
-                autoresVivos.forEach(a -> System.out.println("Nombre: " + a.getNombre()));
-                System.out.println("----------------------------------\n");
+                System.out.println("\n--- AUTORES VIVOS EN EL AÑO " + anio + " ---");
+                autoresVivos.forEach(a -> {
+                    System.out.println("Autor: " + a.getNombre());
+                    System.out.println("Fecha de nacimiento: " + (a.getFechaDeNacimiento() != null ? a.getFechaDeNacimiento() : "N/A"));
+                    System.out.println("Fecha de fallecimiento: " + (a.getFechaDeFallecimiento() != null ? a.getFechaDeFallecimiento() : "Presente"));
+
+                    String librosDelAutor = a.getLibros().stream()
+                            .map(Libro::getTitulo)
+                            .collect(Collectors.joining(", "));
+
+                    System.out.println("Libros: [" + librosDelAutor + "]");
+                    System.out.println("----------------------------------");
+                });
             }
         } catch (InputMismatchException e) {
             System.out.println("Error: Debes ingresar un número válido para el año.");
@@ -195,15 +243,21 @@ public class Principal {
         List<Libro> librosPorIdioma = libroRepository.findByIdioma(idiomaBusqueda);
 
         if (librosPorIdioma.isEmpty()) {
-            System.out.println("No se encontraron libros en ese idioma en la base de datos.");
+            System.out.println("\nNo se encontraron libros registrados en el idioma: " + idiomaBusqueda);
         } else {
             System.out.println("\n--- LIBROS ENCONTRADOS (" + idiomaBusqueda + ") ---");
-            librosPorIdioma.forEach(System.out::println);
+            librosPorIdioma.forEach(l -> {
+                System.out.println("----- LIBRO -----");
+                System.out.println("Título: " + l.getTitulo().toUpperCase());
+                System.out.println("Autor: " + (l.getAutor() != null ? l.getAutor().getNombre() : "Desconocido"));
+                System.out.println("Idioma: " + l.getIdioma());
+                System.out.println("Número de descargas: " + l.getNumeroDeDescargas());
+                System.out.println("-----------------\n");
+            });
 
-            long cantidad = librosPorIdioma.stream().count();
-
-            System.out.println("\n--- ESTADÍSTICAS ---");
-            System.out.println("Cantidad de libros en '" + idiomaBusqueda + "': " + cantidad);
+            long cantidad = librosPorIdioma.size();
+            System.out.println("--- ESTADÍSTICAS ---");
+            System.out.println("Total de libros en '" + idiomaBusqueda + "': " + cantidad);
             System.out.println("---------------------\n");
         }
     }
@@ -239,14 +293,12 @@ public class Principal {
                 System.out.println("Libro guardado con éxito en la base de datos.");
             }
 
-            System.out.println("\n--- DETALLES DEL LIBRO ENCONTRADO ---");
+            System.out.println("\n---- DETALLES DEL LIBRO ENCONTRADO ----");
             System.out.println("Título Oficial: " + datosLibro.titulo().toUpperCase());
 
-            // Requisito: Primer autor de la lista
             String nombreAutor = datosLibro.autor().isEmpty() ? "Desconocido" : datosLibro.autor().get(0).nombre();
             System.out.println("Autor: " + nombreAutor);
 
-            // Requisito: Solo el primer idioma de la lista
             String idioma = datosLibro.idiomas().isEmpty() ? "Desconocido" : datosLibro.idiomas().get(0);
             System.out.println("Idioma: " + idioma);
 
