@@ -305,22 +305,24 @@ public class Principal {
             System.out.println("Número de descargas: " + datosLibro.numeroDeDescargas());
             System.out.println("--------------------------------------\n");
 
-        }
-
-        if (!datos.resultados().isEmpty()) {
-            DoubleSummaryStatistics est = datos.resultados().stream()
-                    .filter(d -> d.numeroDeDescargas() > 0)
-                    .mapToDouble(DatosLibro::numeroDeDescargas)
-                    .summaryStatistics();
-
-            System.out.println("\n--- ESTADÍSTICAS DE BÚSQUEDA ---");
-            System.out.println("Media de descargas: " + est.getAverage());
-            System.out.println("Máxima de descargas: " + est.getMax());
-            System.out.println("Mínima de descargas: " + est.getMin());
-            System.out.println("Total de registros: " + est.getCount());
         } else {
-            System.out.println("\nNo se encontraron estadísticas porque no hubo resultados de búsqueda.");
+            System.out.println("\n[!] No se encontraron resultados para tu búsqueda en la web.\n");
         }
+
+//        if (!datos.resultados().isEmpty()) {
+//            DoubleSummaryStatistics est = datos.resultados().stream()
+//                    .filter(d -> d.numeroDeDescargas() > 0)
+//                    .mapToDouble(DatosLibro::numeroDeDescargas)
+//                    .summaryStatistics();
+//
+//            System.out.println("\n--- ESTADÍSTICAS DE BÚSQUEDA ---");
+//            System.out.println("Media de descargas: " + est.getAverage());
+//            System.out.println("Máxima de descargas: " + est.getMax());
+//            System.out.println("Mínima de descargas: " + est.getMin());
+//            System.out.println("Total de registros: " + est.getCount());
+//        } else {
+//            System.out.println("\nNo se encontraron estadísticas porque no hubo resultados de búsqueda.");
+//        }
 
     }
 
