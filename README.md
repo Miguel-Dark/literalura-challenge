@@ -34,17 +34,17 @@
 </table>
 
 <h2>Descripción</h2>
-<p>LiterAlura nace como un desafío técnico para demostrar habilidades en el desarrollo Backend con <strong>Java</strong> y <strong>Spring Framework</strong>. La aplicación interactúa con la API de Gutendex, que ofrece acceso a más de 70,000 libros del Proyecto Gutenberg. El objetivo principal es ofrecer una herramienta eficiente para registrar libros y autores, evitando duplicados y proporcionando métricas de interés para el usuario.</p>
+<p>Desarrollé <strong>LiterAlura</strong> como un desafío técnico personal para poner a prueba y demostrar mis habilidades en el ecosistema Backend utilizando <strong>Java</strong> y <strong>Spring Framework</strong>. Mi aplicación interactúa directamente con la API de Gutendex, la cual brinda acceso a un catálogo de más de 70,000 libros del Proyecto Gutenberg. El enfoque principal de mi trabajo fue construir una herramienta eficiente capaz de registrar libros y autores de forma inteligente, asegurando la integridad de los datos al evitar duplicados y ofreciendo métricas de alto valor estadístico para el usuario final.</p>
 
 <h2>Estado del Proyecto</h2>
-<p><strong>Finalizado:</strong> El sistema cumple con todos los requisitos básicos propuestos y añade funcionalidades adicionales de análisis estadístico.</p>
+<p><strong>Finalizado:</strong> He completado satisfactoriamente el sistema, cumpliendo con la totalidad de los requisitos técnicos propuestos e integrando funcionalidades adicionales de análisis estadístico que elevan la calidad del proyecto.</p>
 
 <h2>Capturas de Pantalla</h2>
 <ol>
-  <li><strong>Autores Registrados en la Base de Datos:</strong><br><img src="assets/consola_autores_registrados_db.png" alt="Captura 1"></li>
-  <li><strong>Búsqueda de Autores Vivos:</strong><br><img src="assets/consola_autores_vivos_db.png" alt="Captura 2"></li>
-  <li><strong>Libros Filtrados por Idioma:</strong><br><img src="assets/consola_libros_encontrados_por_idioma_db.png" alt="Captura 3"></li>
-  <li><strong>Catálogo de Libros Registrados:</strong><br><img src="assets/consola_libros_registrados_db.png" alt="Captura 4"></li>
+  <li><strong>Autores registrados en la DB:</strong><br><img src="assets/consola_autores_registrados_db.png" alt="Captura 1"></li>
+  <li><strong>Búsqueda de autores vivos en un año determinado:</strong><br><img src="assets/consola_autores_vivos_db.png" alt="Captura 2"></li>
+  <li><strong>Libros filtrados por idioma:</strong><br><img src="assets/consola_libros_encontrados_por_idioma_db.png" alt="Captura 3"></li>
+  <li><strong>Libros registrados en la DB:</strong><br><img src="assets/consola_libros_registrados_db.png" alt="Captura 4"></li>
   <li><strong>Ranking de los 10 Libros más Descargados:</strong><br><img src="assets/consola_top_10_libros_mas_descargados_db.png" alt="Captura 5"></li>
 </ol>
 
