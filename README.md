@@ -1,5 +1,3 @@
-<h1 align="center">LiterAlura - Catálogo de Libros</h1>
-
 <p align="center">
   <img src="assets/banner_literalura.png" alt="Banner LiterAlura" width="100%">
 </p>
